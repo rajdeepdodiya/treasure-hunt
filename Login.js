@@ -18,6 +18,7 @@ const Login = () => {
     }
 
     return(
+
         <SafeAreaView style={Styles.container}>
 
             <Text style={Styles.largeTitle}> Welcome to the Toronto Geocaching Club</Text>

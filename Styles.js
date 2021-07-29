@@ -10,7 +10,7 @@ const Styles = StyleSheet.create({
     },
 
     boldText25:{
-        fontWeight: 'bold'
+        fontWeight: 'bold',
         
     }, 
     horizontal_align:{
@@ -24,7 +24,7 @@ const Styles = StyleSheet.create({
     largeTitle: {
       fontSize: 15,
       fontWeight: 'bold',
-      color: 'red'
+      color: 'red',
     },
     input: {
       height: 40,
