@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import Styles from './Styles';
 import {NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -20,10 +20,10 @@ export default function App() {
       initialParams={{userEmail: "initialParams@initialParams.com"}}
       options={({route}) => ({userEmail: route.params.userEmail})}
       /> 
-      <Stack.Screen name="TabContainer" component={TabContainer}
+      <Stack.Screen name="Treasure Hunt" component={TabContainer}
       initialParams={{userEmail: "rajdodiya216@gmail.com"}} 
       options={({navigation}) => ({ headerRight : () => (
-        <Button title="+" color="#000000" onPress={() => navigation.replace("AddNewCache")}/>
+        <Button title="+" color="#000000" onPress={() => navigation.navigate("AddNewCache")}/>
       )})
       
     }/>
