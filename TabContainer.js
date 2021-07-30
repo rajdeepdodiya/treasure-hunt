@@ -14,11 +14,11 @@ const TabContainer = () => {
         screenOptions={ ({route}) => ({tabBarIcon: (focused, color, size) => {
                 let iconName;
 
-                if(route.name === "ListScreen"){
+                if(route.name === "List View"){
                     iconName = focused ? 'list' : 'list-outline';
                 }
-                else if(route.name === "MapScreen"){
-                    iconName = focused ? 'heart' : 'heart-outline';
+                else if(route.name === "Map View"){
+                    iconName = focused ? 'map' : 'map-outline';
                 }
                 return <Ionicons name={iconName} size={size} color={color}/>
             }})}
@@ -27,8 +27,8 @@ const TabContainer = () => {
             inactieTintColor: "grey"
         }}
         >
-            <Tab.Screen name="MapScreen" component={MapScreen}/>
-            <Tab.Screen name="ListScreen" component={ListScreen}/>
+            <Tab.Screen name="List View" component={ListScreen}/>
+            <Tab.Screen name="Map View" component={MapScreen}/>
             
         </Tab.Navigator>
     )

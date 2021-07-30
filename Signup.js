@@ -1,11 +1,89 @@
-import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
+import React, { useState }  from 'react';
+import { SafeAreaView, Text, View , TextInput, Button} from 'react-native';
+import Styles from './Styles';
+import { db } from './FirebaseManager';
 
-const Signup = () => {
+const Signup = ({navigation, route}) => {
+
+    const [name, setName] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+    const signUpPressed = () => {
+
+        if(!name.trim()){
+            alert("Please enter your name");
+        }
+        else if(!username.trim()) {
+            alert("Please enter your username");
+        }
+
+        else if (!password.trim()){
+            alert("Please enter your password");
+        }
+
+        else{
+            
+            db.collection("users").get()
+            .then((querySnapshot) => {
+                    
+                    var doesUserExist = false;
+                    querySnapshot.forEach((snapshot) => {
+                       
+                        if(snapshot.data().username === username){
+                            doesUserExist = true;
+                        }
+                        
+                    });
+                    if(doesUserExist){
+                        alert(username+" already has an account. Please log in.");
+                        
+                    }
+                    else{
+
+                        let newUser = {
+                            name: name,
+                            username: username,
+                            password: password
+                        }
+
+                        return db.collection("users").add(newUser);
+                        
+                    }
+
+                    })
+            .then(() => {
+                alert("sign up successful");
+                // navigation.popToTop();
+            })
+            .catch( (error) => {
+                alert("Error while adding / getting user: "+error);
+            })
+        }
+    }
+
     return(
-        <SafeAreaView>
-            <Text>Signup</Text>
-        </SafeAreaView>
+        <SafeAreaView style={Styles.container}>
+
+        <View style={Styles.horizontal_align}>
+            <Text>Name: </Text>
+            <TextInput style={Styles.input} placeholder="enter your name" value={name} onChangeText={setName} textContentType="name"></TextInput>
+        </View>
+
+        <View style={Styles.horizontal_align}>
+            <Text>Email: </Text>
+            <TextInput style={Styles.input} placeholder="enter your email address" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
+        </View>
+
+        <View style={Styles.horizontal_align}>
+            <Text>Password: </Text>
+            <TextInput style={Styles.input} placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password"></TextInput>
+        </View>
+
+        <Button title="Sign Up" onPress={signUpPressed}/>
+
+        
+    </SafeAreaView>
     )
 }
 
