@@ -8,6 +8,10 @@ import Login from './Login';
 import Signup from './Signup';
 import AddNewCache from './AddNewCache';
 import TabContainer from './TabContainer';
+import CacheDetailsScreen from './CacheDetailsScreen';
+
+
+import FavouritesScreen from './FavouritesScreen';
 
 const Stack = createStackNavigator();
 
@@ -28,7 +32,10 @@ export default function App() {
       
     }/>
     <Stack.Screen name="AddNewCache" component={AddNewCache} /> 
-    </Stack.Navigator>
+    <Stack.Screen name="Favourites" component={FavouritesScreen} initialParams={{location:{}} }/> 
+    <Stack.Screen name="CacheDetails" component={CacheDetailsScreen} />
+        </Stack.Navigator>
+
   </NavigationContainer>
   );
 }
