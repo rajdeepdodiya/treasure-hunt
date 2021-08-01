@@ -1,8 +1,11 @@
 import React ,{useEffect,useState} from 'react';
-import { View, Text ,ActivityIndicator,FlatList} from 'react-native';
+import { View, Text ,ActivityIndicator,FlatList, SafeAreaView, Pressable} from 'react-native';
 import { db } from './FirebaseManager';
 import {getDistance} from 'geolib';
 import * as location from 'expo-location';
+//import Styles from './Styles';
+import { StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ListScreen({navigation, route}){
     const [cachesArray,setCachesArray]=useState([]);
@@ -12,10 +15,14 @@ function ListScreen({navigation, route}){
     let LocationCoords = [];
     let nearestLocations=[];
     // const user=route.params.user;
-    const user="123";
+   let user="";
 
     useEffect(() => {
-        setCachesArray([]);
+      AsyncStorage.getItem("username")
+      .then((data) => {console.log(data);user=data})
+      .catch((err)=>{console.log(err)});
+      
+      setCachesArray([]);
         //43.789634649203784, -79.24426781584285 - 8 mass
         //43.656290660189946, -79.38017140235499 - young/dund
        getCurrentLocation();
@@ -23,6 +30,7 @@ function ListScreen({navigation, route}){
     },[]);
 
     const getCurrentLocation= () =>{
+      console.log(user);
 
         location.requestForegroundPermissionsAsync()
           .then(
@@ -65,7 +73,8 @@ function ListScreen({navigation, route}){
       }
 
     const showCaches = (coordinates) => {
-        
+        console.log("user");
+        console.log(user);
         db.collection("caches").where("postedBy","!=",user).get().then((querySnapshot) => {
             if(querySnapshot.size === 0){
                 setMsg("You do not have any caches to find yet");
@@ -89,7 +98,7 @@ function ListScreen({navigation, route}){
                                     latitude:LocationCoords[i].latitude,
                                     longitude:LocationCoords[i].longitude
                                 },
-                               distance:dist,
+                               distance:dist.toFixed(3),
                                title:LocationCoords[i].title,
                                id:LocationCoords[i].id
                             }
@@ -108,25 +117,33 @@ function ListScreen({navigation, route}){
           );      
     }
     
+
+    const goToDetailsScreen = (item) => {
+      navigation.navigate("CacheDetails",{locationInfo:item});
+    }
     return(
-        <View>
-            <Text>Caches Available</Text>
+        <SafeAreaView style={{backgroundColor:'#dfdfdf'},{margin:10}}> 
+            <Text style={styles.page_title}>Caches Available</Text>
          
             <View>
                   {isLoading ? (<ActivityIndicator animating={true} size="large"/>) : (
                 <FlatList
                 data={cachesArray}
                 keyExtractor = {(item,index) => {return item.id}}
-                renderItem={({item,index}) => (
-                <View>
-                   
-                    <Text>{item.title}</Text>
-                    <Text>{item.location.latitude}</Text>
-                    <Text>{item.location.longitude}</Text>  
-                    <Text>{item.distance}</Text>
+                renderItem={({item,index}) => ( <Pressable  onPress={() => goToDetailsScreen(item)}  >
+                <View style={styles.list_item}>
+                   <View style={styles.flex}>
+                   <Text  style={styles.cache_title}>{item.title}</Text>
+                    <Text  style={styles.cache_title}>{item.distance} Kms</Text>
+                   </View>
                     
+                    <Text style={styles.latnlong}>{item.location.latitude.toFixed(3)}</Text>
+                    <Text style={styles.latnlong}>{item.location.longitude.toFixed(3)}</Text>  
+                    
+                    <View style={styles.seperator}/> 
                 </View>
-                
+               
+                </Pressable>
                 )}
 
                 />
@@ -134,8 +151,42 @@ function ListScreen({navigation, route}){
             </View>
                 
             <Text>{msg}</Text>
-        </View>
+        </SafeAreaView>
     );
 }
 
+const styles=StyleSheet.create({
+    list_item:{
+        backgroundColor:'#009A00',
+        borderRadius:15,
+        marginBottom:10
+    },
+    seperator:{
+      height:5,
+      backgroundColor:'white'
+  },
+  cache_title:{
+    color:'white',
+    fontSize:25,
+    fontWeight:'bold',
+    paddingBottom:10,
+    paddingStart:15
+   
+  },
+  flex:{
+    flexDirection:'row'
+  },
+  page_title:{
+    textAlign:'center',
+    fontWeight:'bold',
+    fontSize:30,
+    color:'#009200',
+    margin:10
+  },
+  latnlong:{
+    fontSize:15,
+    color:'yellow',
+    paddingStart:10
+  }
+});
 export default ListScreen;
