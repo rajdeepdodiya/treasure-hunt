@@ -46,8 +46,6 @@ const Login = ({navigation, route}) => {
             .catch( (error) => {
                 alert("Error while getting users: "+error);
             })
-       
-       
     }
 
     const signUpPressed = () => {
