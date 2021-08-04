@@ -10,6 +10,7 @@ const FavouritesScreen = ({navigation,route}) => {
    let matchedFavsArray=[];
    const [favouritesArrayToDisplay,setfavouritesArrayToDisplay] = useState([]);
    const [isLoading,setLoading]=useState(true);
+   const [msg,setMsg] = useState("");
 
 const showFavourites = () =>{
    
@@ -17,17 +18,25 @@ const showFavourites = () =>{
     .then((querySnapShot) => {
         if(querySnapShot.size === 0 ){
             console.log("cloulndt find matching  user");
+            setLoading(false);
+
         }else{
             querySnapShot.forEach((doc) => {
                 userObj=doc;
             });
-            
+
             if("favourites" in userObj.data()){
+              if(userObj.data().favourites.length === 0){
+                setMsg("You have not added any items to favourites yet");
+                setLoading(false);
+              }
                 userFavArray=userObj.data().favourites;
                 db.collection("caches").get()
                 .then((querySnapShot) =>{
                     if(querySnapShot.size === 0){
                         console.log("no caches available");
+                        setMsg("You have not added any items to favourites yet");
+                        setLoading(false);
                     }else{
                         querySnapShot.forEach((doc) => {
                        //  matchedFavsArray.push(doc)  
@@ -45,6 +54,8 @@ const showFavourites = () =>{
 
                  
               }else{
+                setMsg("You have not added any items to favourites yet");
+                setLoading(false);
                 console.log("u have not added anything to favourites");
               }
         }
@@ -68,8 +79,11 @@ const goToDetailsScreen = (item) => {
    
   }
     useEffect(() => { 
+      console.log("reached fav screen useefect");
        AsyncStorage.getItem("username").then((data)=> {
          user=data;
+         console.log("fav user effect");
+         console.log(user);
         showFavourites();
        }).catch((err) => console.log(err));
          
@@ -81,7 +95,7 @@ const goToDetailsScreen = (item) => {
                 <FlatList
                 data={favouritesArrayToDisplay}
                 keyExtractor = {(item,index) => {return item.id}}
-                renderItem={({item,index}) => ( <Pressable  onPress={() => goToDetailsScreen({id:item.id,location:{latitude:item.data().latitude,longitude:item.data().longitude},title:item.data().cacheName})}  >
+                renderItem={({item,index}) => ( <Pressable  onPress={() => goToDetailsScreen({id:item.id,location:{latitude:parseFloat(item.data().latitude),longitude:parseFloat(item.data().longitude)},title:item.data().cacheName,desc:item.data().cacheDescription})}  >
                 <View style={styles.list_item}>
                    <View style={styles.flex}>
                    <Text  style={styles.cache_title}>{item.data().cacheName}</Text>
@@ -97,11 +111,14 @@ const goToDetailsScreen = (item) => {
                 )}
 
                 />
+                
             )}
-
+             <Text>{msg}</Text>
+           
         </View>
     );
 }
+
 
 
 

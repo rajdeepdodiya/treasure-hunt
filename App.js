@@ -10,8 +10,7 @@ import AddNewCache from './AddNewCache';
 import TabContainer from './TabContainer';
 import CacheDetailsScreen from './CacheDetailsScreen';
 import NotesScreen from './NotesScreen';
-
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import FavouritesScreen from './FavouritesScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -28,7 +27,9 @@ export default function App() {
       initialParams={{userEmail: "initialParams@initialParams.com"}}
       options={({route}) => ({userEmail: route.params.userEmail})}
       /> 
+      <Stack.Screen name="favourites" component={FavouritesScreen}/>
       <Stack.Screen name="Treasure Hunt" component={TabContainer}
+      
      
       options={({navigation}) => ({ headerLeft : () => (
         <Button title="Logout" color="#D35400" onPress={() => { 
@@ -45,7 +46,18 @@ export default function App() {
           
          }}/>
       ), headerRight : () => (
-        <Button title="Add" color="#6495ED" onPress={() => navigation.navigate("AddNewCache")}/>
+        <View style={{flexDirection:'row'}}>
+             <Button title="Add" color="#6495ED" onPress={() => navigation.navigate("AddNewCache")}/>
+        <Ionicons
+        style={{marginRight:30}}
+          name='heart'
+          size={35}
+          color="#FF0000"
+          onPress={() => {navigation.navigate("favourites")}}
+        />
+        </View>
+       
+       
       )})
       
     }/>

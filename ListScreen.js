@@ -78,6 +78,7 @@ function ListScreen({navigation, route}){
         db.collection("caches").where("postedBy","!=",user).get().then((querySnapshot) => {
             if(querySnapshot.size === 0){
                 setMsg("You do not have any caches to find yet");
+                setLoading(false);
             }else{
                 
                 setMsg("");
@@ -86,7 +87,7 @@ function ListScreen({navigation, route}){
 
                 querySnapshot.forEach((doc) => {
                  
-                  LocationCoords.push({latitude:parseFloat(doc.data().latitude), longitude:parseFloat(doc.data().longitude),title:doc.data().cacheName,id:doc.id});
+                  LocationCoords.push({latitude:parseFloat(doc.data().latitude), longitude:parseFloat(doc.data().longitude),title:doc.data().cacheName,id:doc.id,desc:doc.data().cacheDescription});
                 });
                 
                 for(let i=0;i<LocationCoords.length;i++){
@@ -100,7 +101,8 @@ function ListScreen({navigation, route}){
                                 },
                                distance:dist.toFixed(3),
                                title:LocationCoords[i].title,
-                               id:LocationCoords[i].id
+                               id:LocationCoords[i].id,
+                                desc:LocationCoords[i].desc
                             }
                             nearestLocations.push(locationInfo);
                         
@@ -140,14 +142,13 @@ function ListScreen({navigation, route}){
                 renderItem={({item,index}) => ( <Pressable  onPress={() => goToDetailsScreen(item)}  >
                 <View style={styles.list_item}>
                    <View style={styles.flex}>
-                   <Text  style={styles.cache_title}>{item.title}</Text>
-                    <Text  style={styles.cache_title}>{item.distance} Kms</Text>
+                   <Text  style={styles.cache1_title}>{item.title}</Text>
+                    <Text  style={styles.cache2_title}>{item.distance} Kms</Text>
                    </View>
                     
-                    <Text style={styles.latnlong}>{item.location.latitude.toFixed(3)}</Text>
-                    <Text style={styles.latnlong}>{item.location.longitude.toFixed(3)}</Text>  
+                    <Text style={styles.latnlong}>{item.desc}</Text>
                     
-                    <View style={styles.seperator}/> 
+                    {/* <View style={styles.seperator}/>  */}
                 </View>
                
                 </Pressable>
@@ -166,20 +167,29 @@ const styles=StyleSheet.create({
     list_item:{
         backgroundColor:'#009A00',
         borderRadius:15,
-        marginBottom:10,
-        marginStart:15,
-        marginEnd:15
+       margin:10,
+       padding:20
     },
     seperator:{
       height:5,
       backgroundColor:'white'
   },
-  cache_title:{
+  cache1_title:{
     color:'white',
     fontSize:25,
     fontWeight:'bold',
     paddingBottom:10,
     paddingStart:15
+   
+  },
+  cache2_title:{
+    color:'white',
+    fontSize:25,
+    fontWeight:'bold',
+    paddingBottom:10,
+    paddingStart:15,
+    marginRight:20,
+    textAlign:"center"
    
   },
   flex:{

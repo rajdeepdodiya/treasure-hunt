@@ -1,12 +1,12 @@
 import React ,{useEffect,useState} from 'react';
-import { View, Text, Dimensions, Button, Switch, Alert,TextInput} from 'react-native';
+import { View, Text, Dimensions, Button, Switch, Alert,TextInput,StyleSheet} from 'react-native';
 import { db } from './FirebaseManager';
 import * as location from 'expo-location';
-import { StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import  MapView, {Marker} from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { RadioButton, Provider } from 'react-native-paper';
+import Styles from './Styles';
 
 //import RadioButtonRN from 'radio-buttons-react-native';
 
@@ -17,6 +17,7 @@ const CacheDetailsScreen = ({navigation,route}) => {
    
     
     let userObj={};
+    const [userToDisplay,setUserToDisplay]=React.useState({});
     let userFavArray=[];
     
     const [isEnabledFav,setEnabledFav]=useState(false);
@@ -39,13 +40,14 @@ const CacheDetailsScreen = ({navigation,route}) => {
         db.collection("users").where("username","==",user).get()
         .then((querySnapShot) => {
           if(querySnapShot.size === 0 ){
-            console.log("useeffect");
             console.log("couldnt find user");
           }else{
             querySnapShot.forEach((doc) => {
               userObj=doc;
+            
             });//forEach
   
+            //load if favourites or  not
             if("favourites" in userObj.data()){
               userFavArray=userObj.data().favourites;
                if(userObj.data().favourites.includes(locationInfo.id)){
@@ -54,6 +56,20 @@ const CacheDetailsScreen = ({navigation,route}) => {
                   setEnabledFav(false);
                }
               }
+
+
+            //load if completed or not
+            if("completion" in userObj.data()){
+                console.log("completion present");
+                if(userObj.data().completion.includes(locationInfo.id)){
+                  setEnabledCompleted(true);
+                    setCompleteDisabled(true);
+                }
+                
+            }else{
+                console.log("no such attribute completion in userObj");
+
+            } //else completion 
   
           }//else
         })
@@ -88,7 +104,7 @@ const CacheDetailsScreen = ({navigation,route}) => {
           },
           {
             text: "No",
-            onPress: () => console.log("Cancel Pressed"),
+            onPress: () => {didComplete(false)},
             style: "cancel"
           }
         ],
@@ -105,13 +121,30 @@ const CacheDetailsScreen = ({navigation,route}) => {
       setCompleteDisabled(true);
       db.collection("users").where("username","==",user).get()
       .then((querySnapShot) => {
-        console.log("addcachecompleted");
         querySnapShot.forEach((doc) =>{
-          userObj=doc.data();
+          userObj=doc
         }
         );
 
-        
+        let completionsFromDb = [];
+        let isCompletionpresent =false;
+        Object.keys(userObj.data()).forEach((item) => {
+          if(item === "completion"){
+              isCompletionpresent = true;
+          }
+        });
+        if(isCompletionpresent){
+            completionsFromDb=userObj.data().completion;
+        }else{
+          console.log("completion not in keys");
+        }
+        completionsFromDb.push(locationInfo.id);
+        //update user obj
+        db.collection("users").doc(userObj.id).update({
+          completion:completionsFromDb
+        }
+        ).then(() => {console.log("successfully updated with completion true")})
+        .catch((err) => {console.log(err)});
       })
       .catch((err) => {console.log(err);});
 
@@ -215,8 +248,10 @@ const CacheDetailsScreen = ({navigation,route}) => {
 
     return (
         <View>
+           
+              <Text style={styles.title}>{locationInfo.title}</Text>
              <MapView 
-                style={{width:Dimensions.get("window").width, height:Dimensions.get("window").height/3}}
+                style={{width:Dimensions.get("window").width, height:Dimensions.get("window").height/3,padding:10,borderColor:"#efefff",borderWidth:2}}
                 initialRegion={currRegion}
                 onRegionChangeComplete={mapMoved} >
       
@@ -224,37 +259,97 @@ const CacheDetailsScreen = ({navigation,route}) => {
                 longitude:currRegion.longitude}} title={locationInfo.title} description=""></Marker>
 
             </MapView>
+            <View style={{height:15}}></View>
+
+            <View style={{ borderRadius:10,height: '50%', borderColor: 'gray', borderWidth: 1 , padding:15,marginStart:10,marginEnd:10}}>
+            <Text style={styles.about}>About:</Text>
+            <Text style={styles.desc}>{locationInfo.desc}</Text>
+
+
+            <Text style={styles.latnlng} >({locationInfo.location.latitude}, {locationInfo.location.longitude})</Text>
+            <View style={styles.seperator}></View>
             <View style={{flexDirection:'row'}}>
-             <Text style={{marginStart:'45%'}}>Add to favourites</Text>
+
+             <Text style={styles.textsFav}>Add to Favourites</Text>
               <Switch 
               style={{marginStart:20}}
-               trackColor={{ false: "#767577", true: "#40E0D0" }}
-               thumbColor={isEnabledFav ? "#008080" : "#f4f3f4"}
+               trackColor={{ false: "#FFFFFF", true: "#40E0D0" }}
+               thumbColor={isEnabledFav ? "#FFFFFF" : "#FFFFFF"}
                ios_backgroundColor="#3e3e3e"
                onValueChange={addOrDelete}
                value={isEnabledFav}/>
 
             </View>
+            <View style={{height:10}}></View>
             <View style={{flexDirection:'row'}}>
-             <Text style={{marginStart:'45%'}}>Completed?</Text>
+             <Text style={styles.textsComplete}>Completed?</Text>
               <Switch 
               disabled={completeDisabled}
-              style={{marginStart:30}}
+              style={{marginStart:38}}
                trackColor={{ false: "#FFFFAA", true: "#00FF00" }}
-               thumbColor={isEnabledCompleted ? "#00A300": "#FF0000"}
+               thumbColor={isEnabledCompleted ? "#FFFFFF": "#FFFFFF"}
                ios_backgroundColor="#3e3e3e"
                onValueChange={didComplete}
                value={isEnabledCompleted}/>
 
             </View>
-           
+                <View style={{height:10}}></View>
               <Button
                onPress={addOrViewNotes}
-             title="notes"
+             title="Notes"
               />
+
+            </View>
+           
+         
+            
             
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+  title:{
+    color:'#191970',
+    textAlign:'center',
+    fontSize:25,
+    margin:10,
+    fontWeight:'bold'
+  },
+  about:{
+    color:"#000080",
+    fontSize:21,
+    margin:10,
+    fontWeight:'bold'
+  },
+  desc:{
+    color:"#1F51FF",
+    fontSize:18,
+    marginStart:10,
+
+  },
+  latnlng:{
+    color:"#696969",
+    fontSize:16,
+    marginBottom:10,
+    marginStart:10,
+    marginTop:10,
+    
+  },
+  seperator:{
+    height:50
+  },
+  textsComplete:{
+    fontSize:20,
+    color:"#696969",
+    marginStart:'33%'
+  },
+  textsFav:{
+    fontSize:20,
+    color:"#696969",
+    marginStart:'25%'
+  }
+}
+);
 
 export default CacheDetailsScreen;

@@ -5,10 +5,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapScreen from './MapScreen';
 import ListScreen from './ListScreen';
 import FavouritesScreen from './FavouritesScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 const TabContainer = () => {
+
 
     return(
         <Tab.Navigator
@@ -20,8 +22,6 @@ const TabContainer = () => {
                 }
                 else if(route.name === "Map View"){
                     iconName = focused ? 'map' : 'map-outline';
-                }else if(route.name === "favourites"){
-                    iconName = focused ? 'heart' :'heart-outline';
                 }
                 return <Ionicons name={iconName} size={size} color={color}/>
             }})}
@@ -32,7 +32,7 @@ const TabContainer = () => {
         >
             <Tab.Screen name="List View" component={ListScreen}/>
             <Tab.Screen name="Map View" component={MapScreen}/>
-            <Tab.Screen name="favourites" component={FavouritesScreen}/>
+           
             
         </Tab.Navigator>
     )
