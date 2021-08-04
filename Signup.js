@@ -65,20 +65,14 @@ const Signup = ({navigation, route}) => {
     return(
         <SafeAreaView style={Styles.container}>
 
-        <View style={Styles.horizontal_align}>
-            <Text>Name: </Text>
-            <TextInput style={Styles.input} placeholder="enter your name" value={name} onChangeText={setName} textContentType="name"></TextInput>
-        </View>
+        <Text style={Styles.text}>Name: </Text>
+        <TextInput style={Styles.input} placeholder="enter your name" value={name} onChangeText={setName} textContentType="name"></TextInput>
 
-        <View style={Styles.horizontal_align}>
-            <Text>Email: </Text>
-            <TextInput style={Styles.input} placeholder="enter your email address" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
-        </View>
-
-        <View style={Styles.horizontal_align}>
-            <Text>Password: </Text>
-            <TextInput style={Styles.input} placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password"></TextInput>
-        </View>
+        <Text style={Styles.text}>Email: </Text>
+        <TextInput style={Styles.input} placeholder="enter your email address" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
+       
+        <Text style={Styles.text}>Password: </Text>
+        <TextInput style={Styles.input} placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password"></TextInput>
 
         <Button title="Sign Up" onPress={signUpPressed}/>
 

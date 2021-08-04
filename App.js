@@ -29,9 +29,23 @@ export default function App() {
       options={({route}) => ({userEmail: route.params.userEmail})}
       /> 
       <Stack.Screen name="Treasure Hunt" component={TabContainer}
-      initialParams={{userEmail: "rajdodiya216@gmail.com"}} 
-      options={({navigation}) => ({ headerRight : () => (
-        <Button title="+" color="#000000" onPress={() => navigation.navigate("AddNewCache")}/>
+     
+      options={({navigation}) => ({ headerLeft : () => (
+        <Button title="Logout" color="#D35400" onPress={() => { 
+          AsyncStorage.removeItem("isRemembered").then(
+            () => {
+              navigation.replace("Login")
+            }
+          )
+          .catch(
+            (error) => {
+              console.log("Error removing user from local storage:"+error);
+            }
+          )
+          
+         }}/>
+      ), headerRight : () => (
+        <Button title="Add" color="#6495ED" onPress={() => navigation.navigate("AddNewCache")}/>
       )})
       
     }/>
