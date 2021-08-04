@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, Button, TextInput } from 'react-native';
 import { db } from './FirebaseManager';
+import Styles from './Styles';
 import * as Location from 'expo-location';
 
 const AddNewCache = ({navigation, route}) => {
@@ -93,7 +94,9 @@ const AddNewCache = ({navigation, route}) => {
             db.collection("caches").add(newCache)
             .then(
                 (docRef) => {
-                    alert("Cache added with id: \n"+docRef.id);
+                    
+                    console.log(("Cache added with id: \n"+docRef.id));
+                    alert("Your geocache has been posted for other users to explore.")
                     navigation.pop();
 
                 }
@@ -109,18 +112,18 @@ const AddNewCache = ({navigation, route}) => {
     }
 
     return(
-        <SafeAreaView>
-            <Text>Name of cache: </Text>
-            <TextInput placeholder="enter the name of the cache" value={cacheNameInput} onChangeText={setCacheNameInput}></TextInput>
+        <SafeAreaView style={Styles.container}>
+            <Text style={Styles.text}>Name of cache: </Text>
+            <TextInput style={Styles.input} placeholder="enter the name of the cache" value={cacheNameInput} onChangeText={setCacheNameInput}></TextInput>
 
-            <Text>Description: </Text>
-            <TextInput placeholder="enter a description of the cache" value={descriptionInput} onChangeText={setDescriptionInput}></TextInput>
+            <Text style={Styles.text}>Description: </Text>
+            <TextInput style={Styles.input} placeholder="enter a description of the cache" value={descriptionInput} onChangeText={setDescriptionInput}></TextInput>
 
-            <Text>Latitude: </Text>
-            <TextInput placeholder="enter the Latitude" value={latitudeInput} onChangeText={setLatitudeInput} keyboardType="decimal-pad"></TextInput>
+            <Text style={Styles.text}>Latitude: </Text>
+            <TextInput style={Styles.input} placeholder="enter the Latitude" value={latitudeInput} onChangeText={setLatitudeInput} keyboardType="decimal-pad"></TextInput>
 
-            <Text>Longitude: </Text>
-            <TextInput placeholder="enter the Longitude" value={longitudeInput} onChangeText={setLongitudeInput} keyboardType="decimal-pad"></TextInput>
+            <Text style={Styles.text}>Longitude: </Text>
+            <TextInput style={Styles.input} placeholder="enter the Longitude" value={longitudeInput} onChangeText={setLongitudeInput} keyboardType="decimal-pad"></TextInput>
 
             <Button title="Use Current Location" onPress={useCurrentLocationPressed}/>
 

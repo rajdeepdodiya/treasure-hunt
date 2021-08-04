@@ -1,5 +1,5 @@
 import React ,{useEffect,useState} from 'react';
-import { View, Text ,ActivityIndicator,FlatList, SafeAreaView, Pressable} from 'react-native';
+import { View, Text ,ActivityIndicator,FlatList, SafeAreaView, Pressable, ScrollView} from 'react-native';
 import { db } from './FirebaseManager';
 import {getDistance} from 'geolib';
 import * as location from 'expo-location';
@@ -99,7 +99,7 @@ function ListScreen({navigation, route}){
                                     latitude:LocationCoords[i].latitude,
                                     longitude:LocationCoords[i].longitude
                                 },
-                               distance:dist.toFixed(3),
+                               distance:dist.toFixed(1),
                                title:LocationCoords[i].title,
                                id:LocationCoords[i].id,
                                 desc:LocationCoords[i].desc
@@ -132,9 +132,9 @@ function ListScreen({navigation, route}){
     }
     return(
         <SafeAreaView style={{backgroundColor:'#dfdfdf'},{margin:10}}> 
-            <Text style={styles.page_title}>Caches Available</Text>
+            <Text style={styles.page_title}>Available Geocaches</Text>
          
-            <View>
+         <View>
                   {isLoading ? (<ActivityIndicator animating={true} size="large"/>) : (
                 <FlatList
                 data={cachesArray}
@@ -143,10 +143,11 @@ function ListScreen({navigation, route}){
                 <View style={styles.list_item}>
                    <View style={styles.flex}>
                    <Text  style={styles.cache1_title}>{item.title}</Text>
-                    <Text  style={styles.cache2_title}>{item.distance} Kms</Text>
+                    <Text  style={styles.cache2_title}>{item.distance} miles</Text>
+                    
                    </View>
                     
-                    <Text style={styles.latnlong}>{item.desc}</Text>
+                    {/* <Text style={styles.latnlong}>{item.desc}</Text> */}
                     
                     {/* <View style={styles.seperator}/>  */}
                 </View>
@@ -156,45 +157,48 @@ function ListScreen({navigation, route}){
 
                 />
             )}
-            </View>
-                
+            </View>    
             <Text>{msg}</Text>
+
         </SafeAreaView>
     );
 }
 
 const styles=StyleSheet.create({
     list_item:{
-        backgroundColor:'#009A00',
-        borderRadius:15,
-       margin:10,
-       padding:20
+
+        borderColor:'black',
+        borderBottomWidth: 2,
+        marginTop: 5,
+        padding: 15,
+        flex: 1,
     },
+
     seperator:{
+
       height:5,
       backgroundColor:'white'
   },
+
   cache1_title:{
-    color:'white',
+    color:'black',
     fontSize:25,
     fontWeight:'bold',
-    paddingBottom:10,
-    paddingStart:15
-   
+    flex: 4,
   },
+
   cache2_title:{
-    color:'white',
-    fontSize:25,
-    fontWeight:'bold',
-    paddingBottom:10,
-    paddingStart:15,
-    marginRight:20,
-    textAlign:"center"
-   
+    color:'#a9a9a9',
+    fontSize:15,
+    textAlign:"right",
+    flex: 1,
+    
   },
+
   flex:{
     flexDirection:'row'
   },
+
   page_title:{
     textAlign:'center',
     fontWeight:'bold',

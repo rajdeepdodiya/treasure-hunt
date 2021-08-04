@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 
 const Styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
-      // alignItems: 'center',  // align itme horizontally centered
+      // alignItems: 'center',  // align items horizontally centered
       justifyContent: 'center', // align items vertically centered
-      margin: 5,
+      margin: 10,
+    
     },
 
     boldText25:{
@@ -16,12 +17,26 @@ const Styles = StyleSheet.create({
     }, 
     horizontal_align:{
         flexDirection: 'row',
-        alignItems:'center'
+        alignItems:'center',
+        marginTop: 10,
+        marginBottom: 10,
     },
+
     text: {
       height: 40,
       fontSize: 25,
       textAlign: 'left',
+      marginTop: 10,
+      marginLeft: 5,
+      marginRight: 5, 
+    },
+
+    smalltext: {
+      fontSize: 18,
+      textAlign: 'left',
+      marginTop: 10,
+      height: 20,
+     
     },
 
     largeTitle: {
@@ -33,9 +48,23 @@ const Styles = StyleSheet.create({
     input: {
       borderWidth: 1,
       borderColor: '#777',
+      borderRadius: 5, 
       padding: 8,
-      margin: 10,
+      marginLeft: 5,
+      marginRight: 5, 
       width: '100%',
+    },
+
+    switch: {
+      marginTop: 10, 
+      marginLeft: 5,
+      marginRight: 5, 
+    },
+
+    button: {
+      alignItems: "center",
+      backgroundColor: "#DDDDDD",
+      padding: 10
     },
     
 
