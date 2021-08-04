@@ -117,16 +117,18 @@ function MapScreen(){
         for(let i=0;i<allGeoCaches.length;i++){
 
           const dist = getDistance({latitude:newCoordinates.latitude, longitude:newCoordinates.longitude}, {latitude:allGeoCaches[i].latitude, longitude:allGeoCaches[i].longitude}) * 0.000621371;
-             
+          const distFromCurrentLocation = getDistance({latitude:currentCoordinates.latitude, longitude:currentCoordinates.longitude}, {latitude:allGeoCaches[i].latitude, longitude:allGeoCaches[i].longitude}) * 0.000621371;
+          
           if(!isNaN(dist)){
 
              const distance = dist.toFixed(1);
-             if (distance <= 25){
+             if (distance <= 5){
 
                  const locationInfo = {
                     latitude: allGeoCaches[i].latitude,
                     longitude: allGeoCaches[i].longitude,
                      distance: distance,
+                     distFromCurrentLocation: distFromCurrentLocation.toFixed(1),
                      title: allGeoCaches[i].title,
                      description: allGeoCaches[i].description,
                      id: allGeoCaches[i].id
@@ -218,7 +220,7 @@ function MapScreen(){
                     return(
 
                     <Marker coordinate={{latitude:location.latitude, longitude: location.longitude}}
-                    title={location.title}
+                    title={location.title+" - ("+location.distFromCurrentLocation+") miles away"}
                     description={location.description}
                     key={index}></Marker>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, SafeAreaView, Switch, Text, TextInput, View} from 'react-native';
+import { Button, SafeAreaView, Switch, Text, TextInput, View, TouchableOpacity} from 'react-native';
 import Styles from './Styles';
 import { db } from './FirebaseManager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -114,26 +114,29 @@ const Login = ({navigation, route}) => {
             <Text style={Styles.largeTitle}>Welcome to the Toronto Geocaching Club</Text>
 
             <Text style={Styles.text}>Username: </Text>
-            <TextInput style={Styles.input} autoCapitalize="none" placeholder="enter your email address" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
+            <TextInput style={Styles.input} autoCapitalize="none" placeholder="enter your username" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
 
             <Text style={Styles.text}>Password: </Text>
             <TextInput style={Styles.input} autoCapitalize="none" placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password" secureTextEntry={true}></TextInput>
 
-            <Switch
+            <View style={Styles.horizontal_align}>
+                <Text> Remember me? </Text>
+                <Switch
              trackColor={{ false: "#767577", true: "#81b0ff" }}
             
              ios_backgroundColor= "#3e3e3e"
              value={rememberMe}
              onValueChange={setRememberMe}
             ></Switch>
+            </View>
+           
 
-
-
-            <Button title="Login" onPress={loginPressed}/>
+            <Button title="Login" style={Styles.button}  onPress={loginPressed}/>
 
             <View style={Styles.horizontal_align}>
                 <Text>Not registered yet? </Text>
-                <Button title=" Sign Up" onPress={signUpPressed}/>
+                <Button style={Styles.button} title="Sign up" onPress={signUpPressed}/>
+               
             </View>
 
            

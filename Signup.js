@@ -24,40 +24,41 @@ const Signup = ({navigation, route}) => {
 
         else{
             
-            db.collection("users").get()
+            db.collection("users").where("username","==",username)
+            .get()
             .then((querySnapshot) => {
-                    
-                    var doesUserExist = false;
-                    querySnapshot.forEach((snapshot) => {
-                       
-                        if(snapshot.data().username === username){
-                            doesUserExist = true;
-                        }
-                        
-                    });
-                    if(doesUserExist){
-                        alert(username+" already has an account. Please log in.");
-                        
-                    }
-                    else{
 
-                        let newUser = {
-                            name: name,
-                            username: username,
-                            password: password
-                        }
+                console.log(querySnapshot);
 
-                        return db.collection("users").add(newUser);
-                        
+                if(querySnapshot.size !== 0){
+                    //users with this username already exists
+
+                    alert(username+" already has an account. Please log in.");
+                }
+
+                else{
+
+                    let newUser = {
+                        name: name,
+                        username: username,
+                        password: password
                     }
 
+                    return db.collection("users").add(newUser)
+                    .then(() => {
+                        alert("sign up successful");
+                        navigation.popToTop();
                     })
-            .then(() => {
-                alert("sign up successful");
-                // navigation.popToTop();
+                    .catch((error) => {
+                        console.log("Error adding user: "+error);
+                    });
+                    
+                }
+
             })
+            
             .catch( (error) => {
-                alert("Error while adding / getting user: "+error);
+                alert("Error while getting user credentials: "+error);
             })
         }
     }
@@ -68,11 +69,11 @@ const Signup = ({navigation, route}) => {
         <Text style={Styles.text}>Name: </Text>
         <TextInput style={Styles.input} placeholder="enter your name" value={name} onChangeText={setName} textContentType="name"></TextInput>
 
-        <Text style={Styles.text}>Email: </Text>
-        <TextInput style={Styles.input} placeholder="enter your email address" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
+        <Text style={Styles.text}>Username: </Text>
+        <TextInput style={Styles.input} autoCapitalize="none" placeholder="enter your username" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
        
         <Text style={Styles.text}>Password: </Text>
-        <TextInput style={Styles.input} placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password"></TextInput>
+        <TextInput style={Styles.input} autoCapitalize="none" placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password"></TextInput>
 
         <Button title="Sign Up" onPress={signUpPressed}/>
 

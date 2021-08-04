@@ -16,8 +16,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
-
-
 export default function App() {
   return (
     <NavigationContainer>
@@ -27,12 +25,17 @@ export default function App() {
       initialParams={{userEmail: "initialParams@initialParams.com"}}
       options={({route}) => ({userEmail: route.params.userEmail})}
       /> 
-      <Stack.Screen name="favourites" component={FavouritesScreen}/>
+      <Stack.Screen name="Favourites" component={FavouritesScreen}/>
       <Stack.Screen name="Treasure Hunt" component={TabContainer}
       
      
       options={({navigation}) => ({ headerLeft : () => (
-        <Button title="Logout" color="#D35400" onPress={() => { 
+        <Ionicons
+        style={{marginLeft:10}}
+        name="log-out"
+        size={35}
+        color="#D35400" 
+        onPress={() => { 
           AsyncStorage.removeItem("isRemembered").then(
             () => {
               navigation.replace("Login")
@@ -47,13 +50,21 @@ export default function App() {
          }}/>
       ), headerRight : () => (
         <View style={{flexDirection:'row'}}>
-             <Button title="Add" color="#6495ED" onPress={() => navigation.navigate("AddNewCache")}/>
+             {/* <Button title="Add" color="#6495ED" onPress={() => navigation.navigate("AddNewCache")}/> */}
+
+             <Ionicons
+       
+          name='add'
+          size={35}
+          color="blue"
+          onPress={() => {navigation.navigate("AddNewCache")}}
+        />
         <Ionicons
-        style={{marginRight:30}}
+        style={{marginRight:10}}
           name='heart'
           size={35}
-          color="#FF0000"
-          onPress={() => {navigation.navigate("favourites")}}
+          color="pink"
+          onPress={() => {navigation.navigate("Favourites")}}
         />
         </View>
        

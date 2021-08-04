@@ -90,7 +90,7 @@ const goToDetailsScreen = (item) => {
         },[]);
     return(
         <View>
-            <Text style={styles.page_title}>Favourites</Text>
+            {/* <Text style={styles.page_title}>Favourites</Text> */}
             {isLoading ? (<ActivityIndicator animating={true} size="large"/>) : (
                 <FlatList
                 data={favouritesArrayToDisplay}
@@ -101,8 +101,8 @@ const goToDetailsScreen = (item) => {
                    <Text  style={styles.cache_title}>{item.data().cacheName}</Text>
                    </View>
                     
-                    <Text style={styles.latnlong}>{parseFloat( item.data().latitude).toFixed(3)}</Text>
-                    <Text style={styles.latnlong}>{parseFloat( item.data().longitude).toFixed(3)}</Text>  
+                    {/* <Text style={styles.latnlong}>{parseFloat( item.data().latitude).toFixed(3)}</Text>
+                    <Text style={styles.latnlong}>{parseFloat( item.data().longitude).toFixed(3)}</Text>   */}
                     
                     <View style={styles.seperator}/> 
                 </View>
@@ -123,25 +123,25 @@ const goToDetailsScreen = (item) => {
 
 
 const styles=StyleSheet.create({
-    list_item:{
-        backgroundColor:'#009A00',
-        borderRadius:15,
-        marginBottom:10,
-        marginStart:15,
-        marginEnd:15
-    },
+  list_item:{
+
+    borderColor:'black',
+    borderBottomWidth: 2,
+    marginTop: 5,
+    padding: 15,
+    flex: 1,
+},
     seperator:{
       height:5,
       backgroundColor:'white'
   },
   cache_title:{
-    color:'white',
+    color:'black',
     fontSize:25,
     fontWeight:'bold',
-    paddingBottom:10,
-    paddingStart:15
-   
+    flex: 3,
   },
+
   flex:{
     flexDirection:'row'
   },
