@@ -121,13 +121,14 @@ function MapScreen(){
           if(!isNaN(dist)){
 
              const distance = dist.toFixed(1);
-             if (distance <= 1){
+             if (distance <= 25){
 
                  const locationInfo = {
                     latitude: allGeoCaches[i].latitude,
                     longitude: allGeoCaches[i].longitude,
                      distance: distance,
                      title: allGeoCaches[i].title,
+                     description: allGeoCaches[i].description,
                      id: allGeoCaches[i].id
                  }
                  loc.push(locationInfo);
@@ -164,8 +165,9 @@ function MapScreen(){
                       { latitude: parseFloat(doc.data().latitude),
                         longitude: parseFloat(doc.data().longitude),
                         title: doc.data().cacheName, 
+                        description: doc.data().cacheDescription,
                         id: doc.id,
-                        postedBy: doc.postedBy
+                        postedBy: doc.data().postedBy
                     });
 
                 });
@@ -211,12 +213,13 @@ function MapScreen(){
         >
             {
                 nearbyGeoCaches.map((location, index) => {
+                    console.log(location);
 
                     return(
 
                     <Marker coordinate={{latitude:location.latitude, longitude: location.longitude}}
                     title={location.title}
-                    description="Cache description goes here"
+                    description={location.description}
                     key={index}></Marker>
 
                     )

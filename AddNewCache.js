@@ -4,7 +4,7 @@ import { SafeAreaView, Text, Button, TextInput } from 'react-native';
 import { db } from './FirebaseManager';
 import * as Location from 'expo-location';
 
-const AddNewCache = () => {
+const AddNewCache = ({navigation, route}) => {
 
     let [cacheNameInput, setCacheNameInput] = useState("");
     let [descriptionInput, setDescriptionInput] = useState("");
@@ -94,6 +94,8 @@ const AddNewCache = () => {
             .then(
                 (docRef) => {
                     alert("Cache added with id: \n"+docRef.id);
+                    navigation.pop();
+
                 }
             )
             .catch(

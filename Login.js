@@ -8,27 +8,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({navigation, route}) => {
 
     useEffect(() => {
-        AsyncStorage.getItem("username")
+        AsyncStorage.getItem("isRemembered")
         .then(
             (datafromStorage) => {
-                if(datafromStorage !== null){
+                if(datafromStorage === "true"){
                     navigation.replace("Treasure Hunt")
+                }
+
+                else{
+                    console.log("User does not want to be remembered. "+datafromStorage);
                 }
                 
             }
         )
-        .catch(() => {
-
+        .catch((error) => {
+            console.log("ERROR: "+error);
         })
     })
 
-    const [username, setUsername] = useState("1");
-    const [password, setPassword] = useState("1");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false)
 
     const loginPressed = () => {
 
         if(!username.trim()) {
+            
             alert("Please enter your username");
         }
 
@@ -37,40 +42,55 @@ const Login = ({navigation, route}) => {
         }
 
         else {
-            db.collection("users").get()
+            db.collection("users").where("username","==",username)
+            .get()
             .then((querySnapshot) => {
-                    
-                    querySnapshot.forEach((snapshot) => {
-                       
-                        console.log(snapshot.data().username +"==="+ username);
-                        if(snapshot.data().username === username){
 
-                           if(snapshot.data().password === password){
-
-                            if(rememberMe){
-
-                                AsyncStorage.setItem("username", username)
-                                .then(() => {
-                                    console.log("Saved username to local storage");
-                                    
-                                })
-                                .catch((error) => {
-    
-                                    console.log();("Error while saving user to local storage "+error);
-                                })
-                            }
-                            navigation.replace("Treasure Hunt");
-
-                           }
-                           else{
-                               alert("Incorrect credentials entered. Please re-try with the correct credentials.");
-                           }
-                        }
-                       
-                        
+                if(querySnapshot.size === 0 ){
+                    alert("No such user exists. You might want to try signing up.");
+                }
+                else {
+                   
+                    let docValue = "";
+                    querySnapshot.forEach((doc) => {
+                        docValue = doc.data();
                     });
 
-                    })
+                    console.log(docValue);
+                    console.log(docValue.username +"==="+ username);
+                    if(docValue.password === password){
+
+                     if(rememberMe){
+
+                         AsyncStorage.setItem("isRemembered", "true")
+                         .then(() => {
+                             console.log("Saved rememberence preference to local storage");
+                             
+                         })
+                         .catch((error) => {
+
+                             console.log("Error while saving user to local storage "+error);
+                         })
+                     }
+
+                     AsyncStorage.setItem("username", username)
+                         .then(() => {
+                             console.log("Saved username to local storage");
+                             navigation.replace("Treasure Hunt");
+                         })
+                         .catch((error) => {
+
+                             console.log("Error while saving user to local storage "+error);
+                         })
+                    
+
+                    }
+                    else{
+                        alert("Incorrect credentials entered. Please re-try with the correct credentials.");
+                    }
+                }
+                    
+            })
 
         
             .catch( (error) => {
@@ -93,11 +113,11 @@ const Login = ({navigation, route}) => {
 
             <Text style={Styles.largeTitle}>Welcome to the Toronto Geocaching Club</Text>
 
-            <Text style={Styles.text}>Email: </Text>
-            <TextInput style={Styles.input} placeholder="enter your email address" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
+            <Text style={Styles.text}>Username: </Text>
+            <TextInput style={Styles.input} autoCapitalize="none" placeholder="enter your email address" value={username} onChangeText={setUsername} textContentType="emailAddress"></TextInput>
 
             <Text style={Styles.text}>Password: </Text>
-            <TextInput style={Styles.input} placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password" secureTextEntry={true}></TextInput>
+            <TextInput style={Styles.input} autoCapitalize="none" placeholder="enter your password" value={password} onChangeText={setPassword} textContentType="password" secureTextEntry={true}></TextInput>
 
             <Switch
              trackColor={{ false: "#767577", true: "#81b0ff" }}

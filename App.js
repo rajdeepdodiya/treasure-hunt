@@ -30,9 +30,9 @@ export default function App() {
       /> 
       <Stack.Screen name="Treasure Hunt" component={TabContainer}
      
-      options={({navigation}) => ({ title: "Treasure Hunt", headerLeft : () => (
+      options={({navigation}) => ({ headerLeft : () => (
         <Button title="Logout" color="#D35400" onPress={() => { 
-          AsyncStorage.removeItem("username").then(
+          AsyncStorage.removeItem("isRemembered").then(
             () => {
               navigation.replace("Login")
             }
