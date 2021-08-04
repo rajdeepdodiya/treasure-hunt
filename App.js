@@ -12,6 +12,7 @@ import CacheDetailsScreen from './CacheDetailsScreen';
 
 
 import FavouritesScreen from './FavouritesScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
@@ -25,9 +26,23 @@ export default function App() {
       options={({route}) => ({userEmail: route.params.userEmail})}
       /> 
       <Stack.Screen name="Treasure Hunt" component={TabContainer}
-      initialParams={{userEmail: "rajdodiya216@gmail.com"}} 
-      options={({navigation}) => ({ headerRight : () => (
-        <Button title="+" color="#000000" onPress={() => navigation.navigate("AddNewCache")}/>
+     
+      options={({navigation}) => ({ title: "Treasure Hunt", headerLeft : () => (
+        <Button title="Logout" color="#D35400" onPress={() => { 
+          AsyncStorage.removeItem("username").then(
+            () => {
+              navigation.replace("Login")
+            }
+          )
+          .catch(
+            (error) => {
+              console.log("Error removing user from local storage:"+error);
+            }
+          )
+          
+         }}/>
+      ), headerRight : () => (
+        <Button title="Add" color="#6495ED" onPress={() => navigation.navigate("AddNewCache")}/>
       )})
       
     }/>
