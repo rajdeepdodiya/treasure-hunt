@@ -85,7 +85,7 @@ function ListScreen({navigation, route}){
                  nearestLocations=[];
 
                 querySnapshot.forEach((doc) => {
-                    
+                 
                   LocationCoords.push({latitude:parseFloat(doc.data().latitude), longitude:parseFloat(doc.data().longitude),title:doc.data().cacheName,id:doc.id});
                 });
                 
@@ -119,7 +119,14 @@ function ListScreen({navigation, route}){
     
 
     const goToDetailsScreen = (item) => {
-      navigation.navigate("CacheDetails",{locationInfo:item});
+      AsyncStorage.getItem("username")
+      .then((data) => {console.log(data);
+        user=data; 
+        navigation.navigate("CacheDetails",{locationInfo:item,user:user});
+      })
+      .catch((err)=>{console.log(err)});
+      
+     
     }
     return(
         <SafeAreaView style={{backgroundColor:'#dfdfdf'},{margin:10}}> 
@@ -159,7 +166,9 @@ const styles=StyleSheet.create({
     list_item:{
         backgroundColor:'#009A00',
         borderRadius:15,
-        marginBottom:10
+        marginBottom:10,
+        marginStart:15,
+        marginEnd:15
     },
     seperator:{
       height:5,

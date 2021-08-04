@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React ,{useEffect}from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Styles from './Styles';
 import {NavigationContainer} from '@react-navigation/native';
@@ -9,12 +9,15 @@ import Signup from './Signup';
 import AddNewCache from './AddNewCache';
 import TabContainer from './TabContainer';
 import CacheDetailsScreen from './CacheDetailsScreen';
+import NotesScreen from './NotesScreen';
 
 
 import FavouritesScreen from './FavouritesScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
+
+
 
 export default function App() {
   return (
@@ -47,9 +50,10 @@ export default function App() {
       
     }/>
     <Stack.Screen name="AddNewCache" component={AddNewCache} /> 
-    <Stack.Screen name="Favourites" component={FavouritesScreen} initialParams={{location:{}} }/> 
-    <Stack.Screen name="CacheDetails" component={CacheDetailsScreen} />
+    <Stack.Screen name="CacheDetails" component={CacheDetailsScreen}  options={({route}) => ({username: route.params.userEmail})}/>
+    <Stack.Screen name="notes" component={NotesScreen} /> 
         </Stack.Navigator>
+        
 
   </NavigationContainer>
   );
